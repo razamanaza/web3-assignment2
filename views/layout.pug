@@ -1,7 +1,21 @@
-doctype html
-html
+doctype
+html(lang='en')
   head
+    meta(charset='utf-8')
+    meta(http-equiv='X-UA-Compatible', content='IE=edge')
+    meta(name='viewport', content='width=device-width, initial-scale=1')
+    meta(name='description', content='')
+    meta(name='author', content='')
     title= title
-    link(rel='stylesheet', href='/stylesheets/style.css')
+    link(href='/stylesheets/style.css', rel='stylesheet')
   body
-    block content
+    nav.navbar.navbar-light.bg-light.navbar-expand-lg
+      div#navbarNav.collapse.navbar-collapse
+        ul.navbar-nav
+          li.nav-item
+            a(class='nav-link' href='/') Home
+          li.nav-item
+            a(class='nav-link' href='/about') About 
+    div.container
+      block content
+    script(src='/javascripts/main.js')
