@@ -8,14 +8,16 @@ html(lang='en')
     meta(name='author', content='')
     title= title
     link(href='/stylesheets/style.css', rel='stylesheet')
+    script(src='https://unpkg.com/react@16/umd/react.production.min.js')
+    script(src='https://unpkg.com/react-dom@16/umd/react-dom.production.min.js')
   body
     nav.navbar.navbar-light.bg-light.navbar-expand-lg
-      div#navbarNav.collapse.navbar-collapse
+      #navbarNav.collapse.navbar-collapse
         ul.navbar-nav
           li.nav-item
             a(class='nav-link' href='/') Home
           li.nav-item
             a(class='nav-link' href='/about') About 
-    div.container
+    .container
       block content
     script(src='/javascripts/main.js')

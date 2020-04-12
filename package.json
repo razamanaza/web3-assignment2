@@ -3,9 +3,14 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "node ./bin/www"
+    "start": "node ./bin/www",
+    "debug": "DEBUG=myapp:* npm start",
+    "babel": "npx babel src --out-dir public/javascripts --presets react-app/prod",
+    "deploy": "npm run babel & npm start"
   },
   "dependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-preset-react-app": "^3.1.2",
     "bootstrap": "^4.4.1",
     "cookie-parser": "~1.4.4",
     "debug": "~2.6.9",
