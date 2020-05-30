@@ -1,10 +1,9 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import App from './components/App';
 import './style.scss'
 
-const title = 'Something really new';
-
 ReactDOM.render(
-<div>{title}</div>,
-document.getElementById('root')
+  <App />,
+  document.getElementById('root')
 );

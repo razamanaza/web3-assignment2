@@ -81,7 +81,8 @@ module.exports = {
 				loader: 'babel-loader',
 				query:
 				{
-					presets:['@babel/react']
+					presets:['@babel/react',{
+									'plugins': ['@babel/plugin-proposal-class-properties']}]
 				}
 			}
 		]
