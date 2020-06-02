@@ -3,6 +3,7 @@ import React from 'react'
 class CountriesList extends React.Component {
   state = {
     countries: [],
+    selected: '',
   }
 
   componentDidMount() {
@@ -36,8 +37,8 @@ class CountriesList extends React.Component {
     })
     
     return (
-      <select className='form-control' onChange={this.fetchCountry}>
-		    <option disabled selected value="unselected"> -- select a country -- </option>
+      <select className='form-control' onChange={this.fetchCountry} value={this.state.selected}>
+		    <option disabled value=''> -- select a country -- </option>
         {options}
       </select>
     )
