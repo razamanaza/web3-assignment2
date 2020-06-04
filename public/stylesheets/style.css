@@ -7182,3 +7182,15 @@ a {
 .jumbotron h1 {
   margin-top: 15px; }
 
+.jumbotron select {
+  margin-bottom: 15px; }
+
+.jumbotron .btn {
+  margin-right: 15px; }
+
+.jumbotron .year {
+  max-width: 200px; }
+
+.jumbotron .hidden {
+  display: none; }
+

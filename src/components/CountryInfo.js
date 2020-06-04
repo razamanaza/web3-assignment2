@@ -1,90 +1,83 @@
 import React from 'react'
 
 class CountryInfo extends React.Component {
-  
+
   initialState = {
       gdp: '',
       industry: '',
       agriculture: '',
       service: '',
-      year: '',
-      country: '',
   }
 
   state = this.initialState
-  
-  fetchBackend = (method, data, url) => {
+
+  /**
+   *
+   * @param {string} method - reqest method valid values: POST, PUT, DELETE
+   * @param {*} data - request data
+   * @param {*} id - country id
+   * Performs reqests to API for data change. After successfull update
+   * initiate current state and sends request for data reload to App component
+   */
+  fetchBackend = (method, data, id) => {
+    const url = this.props.BASEURL + '/' + id
     const requestOptions = {
-        method: method,
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data)
-    };
+      method: method,
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data)
+    }
     fetch(url, requestOptions)
-      .then(async response => {
-        const data = await response.json();
-
-        // check for error response
+      .then(response => {
         if (!response.ok) {
-            // get error message from body or default to response status
-            const error = (data && data.message) || response.status;
-            return Promise.reject(error);
+          const error = response.status + ' ' + response.statusText
+            this.props.setAlert(error.toString())
+        } else {
+          this.setState(this.initialState)
+          this.props.changeCountry(id)
+          this.props.setAlert('', false)
         }
-
-        this.setState({ postId: data.id })
     })
     .catch(error => {
-        this.setState({ errorMessage: error.toString() });
-        console.error('There was an error!', error);
+      this.props.setAlert(error.message)
     });
   }
-  
+
   redrawCountry = event => {
     if(!event) return('')
     const year = event.target.value
-    const gdp = (year in this.props.country.data.gdp) ?  this.props.country.data.gdp[year] : ''
-    const industry = (year in this.props.country.data.industry) ?  this.props.country.data.industry[year] : ''
-    const agriculture = (year in this.props.country.data.agriculture) ?  this.props.country.data.agriculture[year] : ''
-    const service = (year in this.props.country.data.service) ?  this.props.country.data.service[year] : ''
-    this.setState({
-      gdp, industry, agriculture, service, year
-    })
+    const countryData = this.props.country.data
+    const gdp = (year in countryData.gdp) ?  countryData.gdp[year] : ''
+    const industry = (year in countryData.industry) ?  countryData.industry[year] : ''
+    const agriculture = (year in countryData.agriculture) ?  countryData.agriculture[year] : ''
+    const service = (year in countryData.service) ?  countryData.service[year] : ''
+    this.setState({gdp, industry, agriculture, service})
+    this.props.setYear(year)
   }
 
   handleChange = event => {
     const {name, value} = event.target
-
-    this.setState({
-      [name]: value,
-    })
+    this.setState({ [name]: value })
   }
 
   countryUpdate = () => {
-    let countryUpdated = {...this.props.country}
-    const year = this.state.year
-    countryUpdated.data.gdp[year] = this.state.gdp
-    countryUpdated.data.agriculture[year] = this.state.agriculture
-    countryUpdated.data.industry[year] = this.state.industry
-    countryUpdated.data.service[year] = this.state.service
-    const url =  'http://192.168.33.10:8080/countries/' + countryUpdated._id.$oid
-    this.fetchBackend('PUT', countryUpdated, url)    
+    const countryId =  this.props.country._id.$oid
+    const year = this.props.year
+    let countryData = {...this.state, year}
+    this.fetchBackend('PUT', countryData, countryId)
+
   }
 
   yearDelete = () => {
-    const year = this.state.year
-    const url =  'http://192.168.33.10:8080/countries/' + this.props.country._id.$oid
-    this.fetchBackend('DELETE', year, url)
-    this.setState(this.initialState)
+    const year = this.props.year
+    const countryId = this.props.country._id.$oid
+    this.fetchBackend('DELETE', year, countryId)
   }
-  
-  render() {   
-    if(Object.keys(this.props.country).length === 0) return('')
-    if(this.props.country.name !== this.state.country.name) {
-      this.setState(this.initialState)
-      this.setState({country: this.props.country})
-    }
-    
+
+  render() {
+    if(Object.keys(this.props.country).length === 0) return null
+
     const {gdp, industry, agriculture, service} = this.state
-    
+
     const options = Object.keys(this.props.country.data.gdp).map((gdp, index) => {
       return (
         <option value={gdp} key={index}>{gdp}</option>
@@ -93,8 +86,7 @@ class CountryInfo extends React.Component {
 
     return (
       <div className='country-info'>
-        <h1>{this.props.country.name}</h1>
-        <select className='form-control year' onChange={this.redrawCountry} value={this.state.year}>
+        <select className='form-control year' onChange={this.redrawCountry} value={this.props.year}>
           <option disabled value=''> -- select a year -- </option>
           {options}
         </select>

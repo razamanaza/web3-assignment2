@@ -2,42 +2,26 @@ import React from 'react'
 
 class CountriesList extends React.Component {
   state = {
-    countries: [],
     selected: '',
   }
 
-  componentDidMount() {
-    const url = 'http://192.168.33.10:8080/countries'
-
-    fetch(url)
-      .then(result => result.json())
-      .then(result => {
-        this.setState({
-          countries: result,
-        })
-      })
+  changeCountry = (event) => {
+    const {value} = event.target
+    this.setState({
+      selected: value
+    })
+    this.props.changeCountry(value)
   }
 
-  fetchCountry = event => {
-    const countryId = event.target.value
-    const url = 'http://192.168.33.10:8080/countries/' + countryId
-    fetch(url)
-      .then(result => result.json())
-      .then(result => {
-        localStorage.setItem(countryId, JSON.stringify(result))
-        this.props.changeCountry(result)
-      })
-  }
-  
   render() {
-    const options = Object.keys(this.state.countries).map((country, index) => {
+    const options = Object.keys(this.props.countries).map((country, index) => {
       return (
-        <option value={this.state.countries[country]} key={index}>{country}</option>
+        <option value={this.props.countries[country]} key={index}>{country}</option>
       )
     })
     
     return (
-      <select className='form-control' onChange={this.fetchCountry} value={this.state.selected}>
+      <select className='form-control' onChange={this.changeCountry} value={this.state.selected}>
 		    <option disabled value=''> -- select a country -- </option>
         {options}
       </select>
