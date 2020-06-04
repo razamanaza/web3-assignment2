@@ -12,7 +12,6 @@ class CountryInfo extends React.Component {
   state = this.initialState
 
   /**
-   *
    * @param {string} method - reqest method valid values: POST, PUT, DELETE
    * @param {*} data - request data
    * @param {*} id - country id
@@ -32,6 +31,7 @@ class CountryInfo extends React.Component {
           const error = response.status + ' ' + response.statusText
             this.props.setAlert(error.toString())
         } else {
+          localStorage.removeItem(id)
           this.setState(this.initialState)
           this.props.changeCountry(id)
           this.props.setAlert('', false)
@@ -42,6 +42,10 @@ class CountryInfo extends React.Component {
     });
   }
 
+  /**
+   * @param {object} event - event happened after selecting year
+   * Renews current state after year select is changed
+   */
   redrawCountry = event => {
     if(!event) return('')
     const year = event.target.value
@@ -54,19 +58,30 @@ class CountryInfo extends React.Component {
     this.props.setYear(year)
   }
 
+  /**
+   * @param {object} event - event happened when data fields changes
+   * Renews current state after changes in form fields
+   */
   handleChange = event => {
     const {name, value} = event.target
     this.setState({ [name]: value })
   }
 
+  /**
+   * @param {}
+   * Sends API request to update selected year data for current country
+   */
   countryUpdate = () => {
     const countryId =  this.props.country._id.$oid
     const year = this.props.year
     let countryData = {...this.state, year}
     this.fetchBackend('PUT', countryData, countryId)
-
   }
 
+  /**
+   * @param {}
+   * Sends API request to delete selected year from current country
+   */
   yearDelete = () => {
     const year = this.props.year
     const countryId = this.props.country._id.$oid
