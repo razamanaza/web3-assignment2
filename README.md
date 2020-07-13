@@ -1,3 +1,3 @@
-The second assignment for Web Enterprise Development course in Otago Polytechnic.
+Node.js server and React frontend for utilizing API from
 
-Node.js and React
+[flask-backend](https://github.com/razamanaza/flask-backend)
